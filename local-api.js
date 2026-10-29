@@ -2,9 +2,9 @@
 // DEMO ONLY: passwords are salted SHA-256 hashed client-side, which is NOT real security.
 // Play credits have no cash value. No real money, payments or payouts exist anywhere.
 (function () {
-  const START_BALANCE = 10000, MIN_BET = 1, MAX_BET = 5000, DAILY_DEPOSIT_LIMIT = 5000;
-  const WELCOME_BONUS = 2500, DAILY_BONUS = 500, DAY = 24 * 3600 * 1000;
-  const TIERS = [{ name: 'Bronze', min: 0 }, { name: 'Silver', min: 5000 }, { name: 'Gold', min: 25000 }, { name: 'Platinum', min: 100000 }, { name: 'Diamond', min: 500000 }];
+  const START_BALANCE = 500000, MIN_BET = 1, MAX_BET = 250000, DAILY_DEPOSIT_LIMIT = 250000;
+  const WELCOME_BONUS = 125000, DAILY_BONUS = 25000, DAY = 24 * 3600 * 1000;
+  const TIERS = [{ name: 'Bronze', min: 0 }, { name: 'Silver', min: 250000 }, { name: 'Gold', min: 1250000 }, { name: 'Platinum', min: 5000000 }, { name: 'Diamond', min: 25000000 }];
   const USERS_KEY = 'mattdlvx_users_v1', SESSION_KEY = 'mattdlvx_session_v1';
   const round2 = (n) => Math.round(n * 100) / 100;
   const rnd = () => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 2 ** 32; };

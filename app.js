@@ -65,7 +65,7 @@ function authView() {
   let mode = 'signup';
   app.innerHTML = `<div class="auth">
     <h1>Matt<span>dlvx</span></h1>
-    <p class="sub">A play-money casino demo. New players get 10,000 free credits.<br>Credits have no cash value. Accounts are stored only in this browser.</p>
+    <p class="sub">A play-money casino demo. New players get 500,000 free play credits.<br>Credits have no cash value. Accounts are stored only in this browser.</p>
     <div class="panel">
       <div class="tabs"><button data-m="signup" class="on">Sign up</button><button data-m="login">Log in</button></div>
       <form id="authForm">
@@ -91,7 +91,7 @@ function homeView() {
   const v = me.vip;
   app.innerHTML = `
   <section class="balance-card">
-    <div><span class="muted">Play-credit balance (DEMO)</span><div class="big-bal">${fmt(me.balance)} <small>CRD</small></div></div>
+    <div><button class="cur-select" id="balCur" type="button">Play credits · CRD <svg class="caret" viewBox="0 0 12 8" width="11" height="8"><path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></button><div class="big-bal">${fmt(me.balance)}</div><div class="muted demo-note">DEMO · no cash value</div></div>
     <div class="bal-actions"><button class="btn btn-green" id="homeDeposit">Deposit</button><button class="btn btn-light" id="homeWithdraw">Withdraw</button></div>
   </section>
   <section class="card vip">
@@ -115,6 +115,7 @@ function homeView() {
   $('#bonusCard').onclick = openBonuses;
   $('#homeDeposit').onclick = openDeposit;
   $('#homeWithdraw').onclick = openWithdraw;
+  $('#balCur').onclick = () => toast('Play credits (CRD) only — no real currencies in this demo.');
   const c = $('#carousel');
   $('#cl').onclick = () => c.scrollBy({ left: -150, behavior: 'smooth' });
   $('#cr').onclick = () => c.scrollBy({ left: 150, behavior: 'smooth' });
@@ -137,9 +138,9 @@ async function openBonuses() {
 
 function openDeposit() {
   openModal(`<h2>Add play credits</h2>
-    <p class="muted">Free demo top-up — no payment, no real money. Limit: 5,000 credits per 24 hours. Remaining today: <b>${fmt(me.depositRemaining)}</b></p>
-    <div class="quick" style="margin-top:14px">${[500, 1000, 2500, 5000].map(a => `<button data-amt="${a}">+${a}</button>`).join('')}</div>
-    <label>Amount</label><input id="depAmt" type="number" min="1" value="1000">
+    <p class="muted">Free demo top-up — no payment, no real money. Limit: 250,000 credits per 24 hours. Remaining today: <b>${fmt(me.depositRemaining)}</b></p>
+    <div class="quick" style="margin-top:14px">${[25000, 50000, 100000, 250000].map(a => `<button data-amt="${a}">+${a / 1000}k</button>`).join('')}</div>
+    <label>Amount</label><input id="depAmt" type="number" min="1" value="50000">
     <button class="btn btn-green play-btn" id="depGo">Add credits</button><div class="err" id="depErr"></div>
     <button class="btn" data-close style="width:100%;margin-top:6px">Cancel</button>`);
   $('#modalCard').querySelectorAll('[data-amt]').forEach(b => b.onclick = () => $('#depAmt').value = b.dataset.amt);
@@ -153,7 +154,7 @@ function openWithdraw() {
   openModal(`<h2>Withdraw play credits</h2>
     <p class="muted">This only removes play credits from your demo balance. <b>Play credits have no cash value</b> — nothing is paid out and no payment details are ever needed.</p>
     <p style="margin-top:10px">Available: <b>${fmt(me.balance)} CRD</b></p>
-    <label>Amount (credits, min 1)</label><input id="wdAmt" type="number" min="1" step="1" value="${Math.min(100, Math.floor(me.balance))}">
+    <label>Amount (credits, min 1)</label><input id="wdAmt" type="number" min="1" step="1" value="${Math.min(1000, Math.floor(me.balance))}">
     <button class="btn btn-light play-btn" id="wdGo">Withdraw credits</button><div class="err" id="wdErr"></div>
     <button class="btn" data-close style="width:100%;margin-top:6px">Cancel</button>`);
   $('#wdGo').onclick = async () => {
@@ -166,7 +167,7 @@ function openWithdraw() {
 }
 
 function betControls(extra = '') {
-  return `<label>Bet amount (credits)</label><input id="betAmt" type="number" min="${config.minBet}" max="${config.maxBet}" step="1" value="10">
+  return `<label>Bet amount (credits)</label><input id="betAmt" type="number" min="${config.minBet}" max="${config.maxBet}" step="1" value="1000">
   <div class="quick"><button data-q="half">½</button><button data-q="double">2×</button><button data-q="min">Min</button><button data-q="max">Max</button></div>${extra}`;
 }
 function wireQuick() {
@@ -327,7 +328,7 @@ function profileView() {
       <div class="stat"><span>Net result</span><b class="${s.won - s.wagered >= 0 ? 'pos' : 'neg'}">${fmt(s.won - s.wagered)}</b></div>
     </div>
     <div class="panel"><b>VIP progress</b><div class="bar" style="background:#11131a"><i style="width:${(v.progress * 100).toFixed(1)}%"></i></div><p class="muted" style="margin-top:6px">${v.next ? `${fmt(v.nextAt - v.totalWagered)} more credits wagered to reach ${v.next}` : 'Top tier reached'}</p>
-    <p class="muted" style="margin-top:6px">Tiers: Bronze 0 · Silver 5k · Gold 25k · Platinum 100k · Diamond 500k</p></div>
+    <p class="muted" style="margin-top:6px">Tiers: Bronze 0 · Silver 250k · Gold 1.25M · Platinum 5M · Diamond 25M</p></div>
     <button class="btn" id="logout" style="width:100%;padding:14px">Log out</button>
     <p class="legal">Play-money demo. Credits are free, have no cash value and cannot be withdrawn.</p>`;
   $('#logout').onclick = async () => { await api('/logout', {}); me = null; location.hash = '#/login'; route(); };
